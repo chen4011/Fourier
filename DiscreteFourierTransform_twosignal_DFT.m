@@ -55,27 +55,40 @@ xlabel("Time (s)");
 ylabel("Amplitude (A)");
 set(gca, "FontSize", 12);
 title("square wave composition");
+
 %% Discrete Fourier Transform(DFT)
 subplot(4,1,4);
 
-fk = zeros(1,N/2);
+fk = zeros(1,N/2);      % Sample number/2
 
 for k = 1:length(fk)
     bin = K/N*(k-1);        % Frequency of bin, Resoultion = K/N
     val = 0;
-    for n = 1:N
-        val = val + sq(n) * exp(-2i*pi*(k-1)/N*(n-1));
+    real = 0;
+    img = 0;
+    for i = 1:2
+        for n = 0: fk
+            if n < N
+                real = sq(n) * cos(-2* PI* f(i)/ K* n);
+                img = sq(n) * sin(-2* PI* f(i)/ K* n);
+            end
+        end
     end
-    
-    if (k-1) == 0
-        fk(k) = abs(val)/N;
+    mag = 2* sqrt(pow(real,2)+ pow(img,2))/ dftSample;      %mag = 2* norm(real, img)/ N
+    voltage[pin] = 2* PI/ 4* mag* 1e3;       %2*Amplifier = 2* (PI/4)* mag* 1e3[V -> mV]
+    % for n = 1:N
+    %     val = val + sq(n) * exp(-2i*pi*(k-1)/N*(n-1));
+    % end
+    % 
+    % if (k-1) == 0
+    %     fk(k) = abs(val)/N;
+    % 
+    % else
+    %     fk(k) = 2*abs(val)/N;      % A = (pi/4)* (2* abs(val)/ N)
+    % end
 
-    else
-        fk(k) = 2*abs(val)/N;      % A = (pi/4)* (2* abs(val)/ N)
-    end
-    
     scatter(bin,fk(k),'MarkerEdgeColor','#0072BD', "LineWidth", 2);
-    line([bin bin],[0 fk(k)], "LineWidth", 2);
+    % line([bin bin],[0 fk(k)], "LineWidth", 2);
     hold on;
 end
 
