@@ -59,14 +59,14 @@ title("square wave composition");
 subplot(4,1,4);
 
 fk = zeros(1,N/2);
-
+voltage = zeros(1,N/2);
 for k = 1:length(fk)
     bin = K/N*(k-1);        % Frequency of bin, Resoultion = K/N
     val = 0;
     for n = 1:N
         val = val + sq(n) * exp(-2i*pi*(k-1)/N*(n-1));
     end
-    
+    voltage(k) = val;
     if (k-1) == 0
         fk(k) = abs(val)/N;
 
