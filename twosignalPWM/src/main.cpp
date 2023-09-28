@@ -1,18 +1,32 @@
 #include <Arduino.h>
+// the number of the LED pin
+int ledPin = 16;  // 16 corresponds to GPIO16
 
-// put function declarations here:
-int myFunction(int, int);
+// setting PWM properties
+int freq = 5000;
+int ledChannel = 0;
+int resolution = 8;
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+ // configure LED PWM functionalitites
+  ledcSetup(ledChannel, freq, resolution);
+  
+  // attach the channel to the GPIO to be controlled
+  ledcAttachPin(ledPin, ledChannel);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
+  // increase the LED brightness
+  for(int dutyCycle = 0; dutyCycle <= 255; dutyCycle++){   
+    // changing the LED brightness with PWM
+    ledcWrite(ledChannel, dutyCycle);
+    delay(15);
+  }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  // decrease the LED brightness
+  for(int dutyCycle = 255; dutyCycle >= 0; dutyCycle--){
+    // changing the LED brightness with PWM
+    ledcWrite(ledChannel, dutyCycle);   
+    delay(15);
+  }
 }
